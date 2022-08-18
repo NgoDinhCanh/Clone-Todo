@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Link as RouterLink, Navigate, useNavigate } from 'react-router-dom';
 
 // material-ui
 import {
@@ -16,33 +16,39 @@ import {
   OutlinedInput,
   Stack,
   Typography,
-} from "@mui/material";
+  Snackbar,
+  Alert,
+} from '@mui/material';
 
 // third party
-import * as Yup from "yup";
-import { Formik } from "formik";
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 
 // project import
-import FirebaseSocial from "components/common/FirebaseSocial";
-import AnimateButton from "components/@extended/AnimateButton";
+import FirebaseSocial from 'components/common/FirebaseSocial';
+import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import authApi from "api/authApi";
-import { strengthColor, strengthIndicator } from "utils/password-strength";
-import { UserRegister } from "models";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import authApi from 'api/authApi';
+import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import { AlertProps, ResponseSignup, UserRegister } from 'models';
 
 interface LevelState {
   color: string;
   label: string;
 }
 const AuthSignup = () => {
+  const navigate = useNavigate();
   const [levelPassword, setLevelPassword] = useState<LevelState | undefined>();
-  const [levelPasswordCf, setLevelPasswordCf] = useState<
-    LevelState | undefined
-  >();
+  const [levelPasswordCf, setLevelPasswordCf] = useState<LevelState | undefined>();
   const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [alert, setAlert] = useState<AlertProps>({
+    severity: 'success',
+    children: 'Register Successfully',
+  });
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -51,9 +57,7 @@ const AuthSignup = () => {
     setShowPasswordConfirm(!showPasswordConfirm);
   };
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
@@ -66,32 +70,45 @@ const AuthSignup = () => {
     setLevelPasswordCf(strengthColor(temp));
   };
   useEffect(() => {
-    changePassword("");
-    changePasswordCf("");
+    changePassword('');
+    changePasswordCf('');
   }, []);
+  const handleClick = (res: ResponseSignup) => {
+    console.log(res);
+    if (res) {
+      setOpen(true);
+    } else {
+      setOpen(true);
+      setAlert({
+        severity: 'error',
+        children: res as string,
+      });
+    }
+  };
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   return (
     <>
       <Formik
         initialValues={{
-          first_name: "",
-          last_name: "",
-          email: "",
-          password: "",
-          password_confirmation: "",
+          first_name: '',
+          last_name: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
           submit: null,
         }}
         validationSchema={Yup.object().shape({
-          first_name: Yup.string().max(255).required("First Name is required"),
-          last_name: Yup.string().max(255).required("Last Name is required"),
-          email: Yup.string()
-            .email("Must be a valid email")
-            .max(255)
-            .required("Email is required"),
-          password: Yup.string().max(255).required("Password is required"),
-          password_confirmation: Yup.string()
-            .max(255)
-            .required("Password Confirm is required"),
+          first_name: Yup.string().max(255).required('First Name is required'),
+          last_name: Yup.string().max(255).required('Last Name is required'),
+          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          password: Yup.string().max(255).required('Password is required'),
+          password_confirmation: Yup.string().max(255).required('Password Confirm is required'),
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
@@ -99,7 +116,9 @@ const AuthSignup = () => {
             setSubmitting(false);
             const data: UserRegister = values;
             const res = await authApi.signup(data);
-            console.log(res);
+            localStorage.setItem('accessToken', res.accessToken);
+            handleClick(res);
+            navigate('/');
           } catch (err: any) {
             console.error(err);
             setStatus({ success: false });
@@ -108,23 +127,13 @@ const AuthSignup = () => {
           }
         }}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values,
-        }) => {
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => {
           return (
             <form noValidate onSubmit={handleSubmit}>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1}>
-                    <InputLabel htmlFor="firstname-signup">
-                      First Name*
-                    </InputLabel>
+                    <InputLabel htmlFor="firstname-signup">First Name*</InputLabel>
                     <OutlinedInput
                       id="firstname-signup"
                       type="first_name"
@@ -145,9 +154,7 @@ const AuthSignup = () => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1}>
-                    <InputLabel htmlFor="lastname-signup">
-                      Last Name*
-                    </InputLabel>
+                    <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
                     <OutlinedInput
                       fullWidth
                       error={Boolean(touched.last_name && errors.last_name)}
@@ -169,9 +176,7 @@ const AuthSignup = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <Stack spacing={1}>
-                    <InputLabel htmlFor="email-signup">
-                      Email Address*
-                    </InputLabel>
+                    <InputLabel htmlFor="email-signup">Email Address*</InputLabel>
                     <OutlinedInput
                       fullWidth
                       error={Boolean(touched.email && errors.email)}
@@ -198,7 +203,7 @@ const AuthSignup = () => {
                       fullWidth
                       error={Boolean(touched.password && errors.password)}
                       id="password-signup"
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       value={values.password}
                       name="password"
                       onBlur={handleBlur}
@@ -215,11 +220,7 @@ const AuthSignup = () => {
                             edge="end"
                             size="large"
                           >
-                            {showPassword ? (
-                              <VisibilityIcon />
-                            ) : (
-                              <VisibilityOffIcon />
-                            )}
+                            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                           </IconButton>
                         </InputAdornment>
                       }
@@ -240,7 +241,7 @@ const AuthSignup = () => {
                             bgcolor: levelPassword?.color,
                             width: 85,
                             height: 8,
-                            borderRadius: "7px",
+                            borderRadius: '7px',
                           }}
                         />
                       </Grid>
@@ -254,17 +255,12 @@ const AuthSignup = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <Stack spacing={1}>
-                    <InputLabel htmlFor="passwordconfirm-signup">
-                      Password Confirm
-                    </InputLabel>
+                    <InputLabel htmlFor="passwordconfirm-signup">Password Confirm</InputLabel>
                     <OutlinedInput
                       fullWidth
-                      error={Boolean(
-                        touched.password_confirmation &&
-                          errors.password_confirmation
-                      )}
+                      error={Boolean(touched.password_confirmation && errors.password_confirmation)}
                       id="passwordconfirm-signup"
-                      type={showPasswordConfirm ? "text" : "password"}
+                      type={showPasswordConfirm ? 'text' : 'password'}
                       value={values.password_confirmation}
                       name="password_confirmation"
                       onBlur={handleBlur}
@@ -281,23 +277,18 @@ const AuthSignup = () => {
                             edge="end"
                             size="large"
                           >
-                            {showPasswordConfirm ? (
-                              <VisibilityIcon />
-                            ) : (
-                              <VisibilityOffIcon />
-                            )}
+                            {showPasswordConfirm ? <VisibilityIcon /> : <VisibilityOffIcon />}
                           </IconButton>
                         </InputAdornment>
                       }
                       placeholder="******"
                       inputProps={{}}
                     />
-                    {touched.password_confirmation &&
-                      errors.password_confirmation && (
-                        <FormHelperText error id="helper-text-password-signup">
-                          {errors.password_confirmation}
-                        </FormHelperText>
-                      )}
+                    {touched.password_confirmation && errors.password_confirmation && (
+                      <FormHelperText error id="helper-text-password-signup">
+                        {errors.password_confirmation}
+                      </FormHelperText>
+                    )}
                   </Stack>
                   <FormControl fullWidth sx={{ mt: 2 }}>
                     <Grid container spacing={2} alignItems="center">
@@ -307,7 +298,7 @@ const AuthSignup = () => {
                             bgcolor: levelPasswordCf?.color,
                             width: 85,
                             height: 8,
-                            borderRadius: "7px",
+                            borderRadius: '7px',
                           }}
                         />
                       </Grid>
@@ -364,6 +355,16 @@ const AuthSignup = () => {
           );
         }}
       </Formik>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleClose} severity={alert.severity} sx={{ width: '100%' }}>
+          {alert.children}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

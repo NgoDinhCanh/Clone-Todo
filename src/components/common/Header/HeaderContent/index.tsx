@@ -1,0 +1,22 @@
+// material-ui
+import { Box, Theme, useMediaQuery } from '@mui/material';
+
+// project import
+import Profile from './Profile';
+import Notification from './Notification';
+
+const HeaderContent = () => {
+  const matchesXs = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+
+  return (
+    <>
+      {!matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
+      {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
+      <Notification />
+      {!matchesXs && <Profile />}
+      {/* {matchesXs && <MobileSection />} */}
+    </>
+  );
+};
+
+export default HeaderContent;

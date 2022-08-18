@@ -4,6 +4,10 @@ export interface ResponseLogin {
 }
 
 export interface ResponseSignup {
-  accessToken?: string;
+  accessToken: string;
   message: string;
+}
+export interface AlertProps {
+  severity: 'success' | 'error';
+  children: string;
 }

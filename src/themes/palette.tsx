@@ -1,30 +1,30 @@
 // material-ui
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 // third-party
-import { presetPalettes } from "@ant-design/colors";
+import { presetPalettes } from '@ant-design/colors';
 
 // project import
-import ThemeOption from "./theme";
+import ThemeOption from './theme';
 
 const Palette = (mode: any) => {
   const colors = presetPalettes;
 
   const greyPrimary = [
-    "#ffffff",
-    "#fafafa",
-    "#f5f5f5",
-    "#f0f0f0",
-    "#d9d9d9",
-    "#bfbfbf",
-    "#8c8c8c",
-    "#595959",
-    "#262626",
-    "#141414",
-    "#000000",
+    '#ffffff',
+    '#fafafa',
+    '#f5f5f5',
+    '#f0f0f0',
+    '#d9d9d9',
+    '#bfbfbf',
+    '#8c8c8c',
+    '#595959',
+    '#262626',
+    '#141414',
+    '#000000',
   ];
-  const greyAscent = ["#fafafa", "#bfbfbf", "#434343", "#1f1f1f"];
-  const greyConstant = ["#fafafb", "#e6ebf1"];
+  const greyAscent = ['#fafafa', '#bfbfbf', '#434343', '#1f1f1f'];
+  const greyConstant = ['#fafafb', '#e6ebf1'];
 
   colors.grey = [...greyPrimary, ...greyAscent, ...greyConstant];
 
@@ -34,8 +34,8 @@ const Palette = (mode: any) => {
     palette: {
       mode,
       common: {
-        black: "#000",
-        white: "#fff",
+        black: '#000',
+        white: '#fff',
       },
       ...paletteColor,
       text: {

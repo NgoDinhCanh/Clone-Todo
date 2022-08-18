@@ -13,8 +13,8 @@ export interface UserRegister {
 export interface User {
   id: number;
   email: string;
-  name_rendered: string;
-  full_name: string;
+  name_rendered?: string;
+  full_name?: string;
   name_suffix?: string;
   employeeid?: string;
   first_name: string;

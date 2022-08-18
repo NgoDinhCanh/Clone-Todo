@@ -1,25 +1,23 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo } from 'react';
 
 // material-ui
-import { CssBaseline, StyledEngineProvider } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline, StyledEngineProvider } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // project import
-import Palette from "./palette";
-import Typography from "./typography";
-import CustomShadows from "./shadows";
-import componentsOverride from "./overrides";
+import Palette from './palette';
+import Typography from './typography';
+import CustomShadows from './shadows';
+import componentsOverride from './overrides';
 
 interface ThemeCustomizationProps {
   children: ReactNode;
 }
-export default function ThemeCustomization({
-  children,
-}: ThemeCustomizationProps) {
-  const theme = Palette("dark");
+export default function ThemeCustomization({ children }: ThemeCustomizationProps) {
+  const theme = Palette('dark');
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const themeTypography = Typography(`'Public Sans', sans-serif`);
+  const themeTypography = Typography(`'Roboto','Public Sans', sans-serif`);
   const themeCustomShadows = useMemo(() => CustomShadows(theme), [theme]);
 
   const themeOptions = useMemo(
@@ -33,7 +31,7 @@ export default function ThemeCustomization({
           xl: 1536,
         },
       },
-      direction: "ltr",
+      direction: 'ltr',
       mixins: {
         toolbar: {
           minHeight: 60,
@@ -50,7 +48,6 @@ export default function ThemeCustomization({
 
   const themes = createTheme(themeOptions);
   themes.components = componentsOverride(themes);
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes}>

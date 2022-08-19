@@ -11,8 +11,8 @@ import { setUser } from 'redux/features/user';
 
 const AppLayout = () => {
   const navigate = useNavigate();
-  const { drawerOpen } = useAppSelector(openMenu);
   const dispatch = useAppDispatch();
+  const { drawerOpen } = useAppSelector(openMenu);
   const [loading, setLoading] = useState(true);
   const theme = useTheme();
   const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
@@ -38,16 +38,17 @@ const AppLayout = () => {
     dispatch(openDrawer({ drawerOpen: !open }));
   };
   useEffect(() => {
+    console.log(matchDownLG);
     setOpen(!matchDownLG);
     dispatch(openDrawer({ drawerOpen: !matchDownLG }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchDownLG]);
-
   useEffect(() => {
     if (open !== drawerOpen) setOpen(drawerOpen);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drawerOpen]);
+
   return loading ? (
     <Loading fullHeight />
   ) : (

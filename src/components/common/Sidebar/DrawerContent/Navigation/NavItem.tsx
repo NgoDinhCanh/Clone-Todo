@@ -1,8 +1,5 @@
-import PropTypes from 'prop-types';
 import { forwardRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -13,11 +10,9 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-
 // project import
-import { activeItem } from 'redux/features/menu';
-
-// ==============================|| NAVIGATION - LIST ITEM ||============================== //
+import { activeItem, openMenu } from 'redux/features/menu';
+import { useAppDispatch, useAppSelector } from 'redux/hooks';
 interface NavItemProps {
   item: any;
   level: any;
@@ -29,8 +24,8 @@ interface listItemProps {
 }
 const NavItem = ({ item, level }: NavItemProps) => {
   const theme = useTheme();
-  const dispatch = useDispatch();
-  const menu = useSelector((state: any) => state.menu);
+  const dispatch = useAppDispatch();
+  const menu = useAppSelector(openMenu);
   const { drawerOpen, openItem } = menu;
 
   let itemTarget = '_self';
@@ -158,11 +153,6 @@ const NavItem = ({ item, level }: NavItemProps) => {
       )}
     </ListItemButton>
   );
-};
-
-NavItem.propTypes = {
-  item: PropTypes.object,
-  level: PropTypes.number,
 };
 
 export default NavItem;

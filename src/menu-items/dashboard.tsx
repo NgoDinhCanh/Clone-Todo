@@ -1,5 +1,5 @@
 // assets
-import { AiOutlineDashboard } from "react-icons/ai";
+import { AiOutlineDashboard } from 'react-icons/ai';
 
 // icons
 const icons = {
@@ -7,15 +7,15 @@ const icons = {
 };
 
 const dashboard = {
-  id: "group-dashboard",
-  title: "Navigation",
-  type: "group",
+  id: 'group-favourites',
+  title: 'Favourites',
+  type: 'group',
   children: [
     {
-      id: "dashboard",
-      title: "Dashboard",
-      type: "item",
-      url: "/dashboard/default",
+      id: 'dashboard',
+      title: 'Dashboard',
+      type: 'item',
+      url: '/dashboard/default',
       icon: icons.AiOutlineDashboard,
       breadcrumbs: false,
     },

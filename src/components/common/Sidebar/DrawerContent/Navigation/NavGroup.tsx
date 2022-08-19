@@ -1,12 +1,11 @@
-import { useSelector } from 'react-redux';
 // material-ui
 import { Box, List, Typography } from '@mui/material';
 // project import
 import NavItem from './NavItem';
+import { useAppSelector } from 'redux/hooks';
+import { openMenu } from 'redux/features/menu';
 const NavGroup = ({ item }: any) => {
-  const menu = useSelector((state: any) => state.menu);
-  const { drawerOpen } = menu;
-
+  const { drawerOpen } = useAppSelector(openMenu);
   const navCollapse = item.children?.map((menuItem: any) => {
     switch (menuItem.type) {
       case 'collapse':

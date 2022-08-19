@@ -69,19 +69,16 @@ const Profile = () => {
     navigate('/');
   };
 
-  const anchorRef = useRef(null);
+  const anchorRef = useRef<any>(null);
   const [open, setOpen] = useState(false);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = () => {
-    // if (
-    //   anchorRef.current &&
-    //   anchorRef.current.contains(event.target as EventTarget)
-    // ) {
-    //   return;
-    // }
+  const handleClose = (event: MouseEvent | TouchEvent) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
     setOpen(false);
   };
 

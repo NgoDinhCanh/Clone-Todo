@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'redux/store';
 export interface MenuState {
-  openItem: string[];
+  openItem: any;
   openComponent: string;
   drawerOpen: boolean;
   componentDrawerOpen: boolean;
